@@ -1,8 +1,9 @@
 import { createStore, combineReducers } from 'redux'
-import { setauthdetails } from '../actions';
+import { setauthdetails, setcompanydetails } from '../actions';
 
 const combiner = combineReducers({
-    authdetails: setauthdetails
+    authdetails: setauthdetails,
+    companydetails: setcompanydetails
 });
 
 const store = createStore(combiner);

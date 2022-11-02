@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { SET_AUTH_DETAILS } from '../../redux/types';
 import { authDetailsState } from '../../redux/actions';
+import '../../styles/authcomponents/Login.css'
 
 function Login() {
 
@@ -50,11 +51,20 @@ function Login() {
   }
 
   return (
-    <div>
-        <p>Login</p>
-        <input type='text' placeholder='Company ID' value={companyAdminID} onChange={(e) => { setcompanyAdminID(e.target.value) }} id='companyAdminID' name='companyAdminID' />
-        <input type='password' placeholder='Password' value={password} onChange={(e) => { setpassword(e.target.value) }} id='password' name='password' />
-        <button onClick={() => { btnLogin() }}>Login</button>
+    <div id='div_login'>
+        <div id='div_flexed_login'></div>
+        <div id='div_form_login'>
+            <div className='div_form_indvs'>
+                <p id='p_label_login'>Welcome, Company Admin!</p>
+                <p id='p_sublabel_login'>Enter credentials below to login</p>
+            </div>
+            <div className='div_form_indvs'>
+                <input type='text' placeholder='Company ID' value={companyAdminID} onChange={(e) => { setcompanyAdminID(e.target.value) }} id='companyAdminID' name='companyAdminID' className='login_inputs' />
+                <input type='password' placeholder='Password' value={password} onChange={(e) => { setpassword(e.target.value) }} id='password' name='password' className='login_inputs' />
+                <button id='btn_login' onClick={() => { btnLogin() }}>Login</button>
+                <div id='div_flexed_under_forms'></div>
+            </div>
+        </div>
     </div>
   )
 }
