@@ -52,7 +52,9 @@ function Login() {
 
   return (
     <div id='div_login'>
-        <div id='div_flexed_login'></div>
+        <div id='div_flexed_login'>
+            <div id='div_img_container_login'></div>
+        </div>
         <div id='div_form_login'>
             <div className='div_form_indvs'>
                 <p id='p_label_login'>Welcome, Company Admin!</p>
