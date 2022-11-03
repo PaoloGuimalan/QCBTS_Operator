@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import '../../styles/maincomponents/Home.css'
 import Axios from 'axios';
@@ -6,14 +6,24 @@ import { URL } from '../../json/urlconfig';
 import { SET_AUTH_DETAILS, SET_COMPANY_DETAILS } from '../../redux/types';
 import { authDetailsState, companyDetailsState } from '../../redux/actions';
 import LogoutIcon from '@material-ui/icons/ExitToApp'
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import DashboardIcon from '@material-ui/icons/Dashboard'
+import MapIcon from '@material-ui/icons/Map'
+import MessagesIcon from '@material-ui/icons/Message'
+import DriverIcon from '@material-ui/icons/EmojiPeople'
+import BusIcon from '@material-ui/icons/DirectionsBus'
+import AccountIcon from '@material-ui/icons/AccountCircle'
+import { motion } from 'framer-motion'
 
 function Home() {
 
   const authdetails = useSelector(state => state.authdetails)
   const companydetails = useSelector(state => state.companydetails)
+  const path = useLocation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const [navstate, setnavstate] = useState("home")
 
   useEffect(() => {
     getCompanyData()
@@ -23,6 +33,16 @@ function Home() {
     }
 
   },[authdetails]);
+
+  useEffect(() => {
+    if(path.pathname.split("/")[2] == undefined){
+      setnavstate("home")
+    }
+    else{
+      setnavstate(path.pathname.split("/")[2])
+    }
+    // console.log(path.pathname.split("/")[2])
+  },[path])
 
   const getCompanyData = () => {
     if(authdetails.companyID != ""){
@@ -60,8 +80,67 @@ function Home() {
           <p className='p_home_labels'>Bus Track</p>
           <p className='p_home_labels'>{companydetails.companyName}</p>
         </div>
-        <div>
-          <p style={{fontSize: "13px", color: "white"}}>Navigation Buttons Section</p>
+        <div id='div_navigations_btns'>
+          <Link to='/home' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "home"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <DashboardIcon style={{fontSize: "22px"}} />
+              <span>Dashboard</span>
+            </motion.div>
+          </Link>
+          <Link to='/home/messages' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "messages"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <MessagesIcon style={{fontSize: "22px"}} />
+              <span>Messages</span>
+            </motion.div>
+          </Link>
+          <Link to='/home/map' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "map"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <MapIcon style={{fontSize: "22px"}} />
+              <span>Map Management</span>
+            </motion.div>
+          </Link>
+          <Link to='/home/da' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "da"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <DriverIcon style={{fontSize: "22px"}} />
+              <span>Drivers Account</span>
+            </motion.div>
+          </Link>
+          <Link to='/home/buses' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "buses"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <BusIcon style={{fontSize: "22px"}} />
+              <span>Bus Management</span>
+            </motion.div>
+          </Link>
+          <Link to='/home/account' className='link_styler'>
+            <motion.div
+            animate={{
+              color: navstate == "account"? "#EBA400" : "white"
+            }} 
+            className='div_icon_labels_link'>
+              <AccountIcon style={{fontSize: "22px"}} />
+              <span>Account</span>
+            </motion.div>
+          </Link>
         </div>
         <div id='div_navigations_flexed'></div>
         <div id='div_logout_btn_container'>
