@@ -6,7 +6,7 @@ import { URL } from '../../json/urlconfig';
 import { SET_AUTH_DETAILS, SET_COMPANY_DETAILS } from '../../redux/types';
 import { authDetailsState, companyDetailsState } from '../../redux/actions';
 import LogoutIcon from '@material-ui/icons/ExitToApp'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import MapIcon from '@material-ui/icons/Map'
 import MessagesIcon from '@material-ui/icons/Message'
@@ -14,6 +14,12 @@ import DriverIcon from '@material-ui/icons/EmojiPeople'
 import BusIcon from '@material-ui/icons/DirectionsBus'
 import AccountIcon from '@material-ui/icons/AccountCircle'
 import { motion } from 'framer-motion'
+import Dashboard from '../subcomponents/Dashboard';
+import Messages from '../subcomponents/Messages';
+import Map from '../subcomponents/Map';
+import DriversAccount from '../subcomponents/DriversAccount';
+import BusManagement from '../subcomponents/BusManagement';
+import Account from '../subcomponents/Account';
 
 function Home() {
 
@@ -148,7 +154,14 @@ function Home() {
         </div>
       </div>
       <div id='div_home_flexed_container'>
-        Home: {JSON.stringify(authdetails)}
+        <Routes>
+          <Route path='/' element={<Dashboard />} />
+          <Route path='/messages/*' element={<Messages />} />
+          <Route path='/map/*' element={<Map />} />
+          <Route path='/da/*' element={<DriversAccount />} />
+          <Route path='/buses/*' element={<BusManagement />} />
+          <Route path='/account/*' element={<Account />} />
+        </Routes>
       </div>
     </div>
   )
