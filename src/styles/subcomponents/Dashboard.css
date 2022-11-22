@@ -10,6 +10,7 @@
     padding-top: 10px;
     gap: 5px;
     align-items: center;
+    overflow-y: auto;
 }
 
 #div_dashboard_header{
@@ -294,4 +295,28 @@
     padding-right: 10px;
     font-size: 13px;
     cursor: pointer;
+}
+
+@media screen and (max-width: 1150px) {
+    .div_mini_stats_section:last-of-type{
+        margin-top: 20px;
+        max-width: none;
+        height: 400px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .div_mini_stats_section:nth-of-type(2){
+        margin-top: 10px;
+    }
+
+    .div_mini_stats_sub_one{
+        width: 100%;
+        max-width: none;
+    }
+
+    .div_mini_stats_section:first-of-type{
+        width: 100%;
+        max-width: none;
+    }
 }
