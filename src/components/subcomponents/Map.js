@@ -1,8 +1,12 @@
 import React from 'react'
+import MainIndex from '../maincomponents/MainIndex'
+import './../../styles/subcomponents/Map.css'
 
 function Map() {
   return (
-    <div>Map</div>
+    <div id='div_map'>
+      <MainIndex />
+    </div>
   )
 }
 

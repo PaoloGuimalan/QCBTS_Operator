@@ -8,6 +8,9 @@ import { useNavigate } from 'react-router-dom'
 import DriverIcon from '@material-ui/icons/AirlineSeatReclineNormal'
 import BusIcon from '@material-ui/icons/DirectionsBus'
 import MainIndex from '../maincomponents/MainIndex'
+import StarIcon from '@material-ui/icons/Star'
+import StarIconEmpty from '@material-ui/icons/StarOutline'
+import LocationIcon from '@material-ui/icons/LocationOn'
 
 function Dashboard() {
 
@@ -55,9 +58,54 @@ function Dashboard() {
           </div>
         </div>
         <div className='div_mini_stats_section'>
-          <p>Hello</p>
+          <div id='div_mini_stats_rating'>
+            <div id='div_rating_header'>
+              <p className='p_rating_label'>Average User Rating</p>
+              <p className='p_rating_label'>4.3 / 5</p>
+            </div>
+            <div id='div_rating_stars'>
+              <StarIcon style={{fontSize: "30px", color: "#E8AF1D"}} />
+              <StarIcon style={{fontSize: "30px", color: "#E8AF1D"}} />
+              <StarIcon style={{fontSize: "30px", color: "#E8AF1D"}} />
+              <StarIcon style={{fontSize: "30px", color: "#9B9B9B"}} />
+              <StarIcon style={{fontSize: "30px", color: "#9B9B9B"}} />
+            </div>
+            <div id='div_rating_bar_holder'>
+              <div className='div_rating_bar'>
+                <span className='span_star_icon_label'>5<StarIcon style={{fontSize: "10px", color: "#9B9B9B"}} /></span>
+                <span className='span_rating_bar'>
+                  <span className='span_rating_inside_bar' style={{width: "60%"}} ></span>
+                </span>
+              </div>
+              <div className='div_rating_bar'>
+                <span className='span_star_icon_label'>4<StarIcon style={{fontSize: "10px", color: "#9B9B9B"}} /></span>
+                <span className='span_rating_bar'>
+                  <span className='span_rating_inside_bar' style={{width: "20%"}} ></span>
+                </span>
+              </div>
+              <div className='div_rating_bar'>
+                <span className='span_star_icon_label'>3<StarIcon style={{fontSize: "10px", color: "#9B9B9B"}} /></span>
+                <span className='span_rating_bar'>
+                  <span className='span_rating_inside_bar' style={{width: "10%"}} ></span>
+                </span>
+              </div>
+              <div className='div_rating_bar'>
+                <span className='span_star_icon_label'>2<StarIcon style={{fontSize: "10px", color: "#9B9B9B"}} /></span>
+                <span className='span_rating_bar'>
+                  <span className='span_rating_inside_bar' style={{width: "5%"}} ></span>
+                </span>
+              </div>
+              <div className='div_rating_bar'>
+                <span className='span_star_icon_label'>1<StarIcon style={{fontSize: "10px", color: "#9B9B9B"}} /></span>
+                <span className='span_rating_bar'>
+                  <span className='span_rating_inside_bar' style={{width: "5%"}} ></span>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
         <div className='div_mini_stats_section'>
+          <div id='div_map_clickable_label' onClick={() => { navigate("/home/map") }}><LocationIcon style={{fontSize: "20px"}} /> View Live Tracking</div>
           <MainIndex />
         </div>
       </div>
