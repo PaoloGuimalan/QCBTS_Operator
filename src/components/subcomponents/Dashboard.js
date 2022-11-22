@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './../../styles/subcomponents/Dashboard.css'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ import MainIndex from '../maincomponents/MainIndex'
 import StarIcon from '@material-ui/icons/Star'
 import StarIconEmpty from '@material-ui/icons/StarOutline'
 import LocationIcon from '@material-ui/icons/LocationOn'
+import SearchIcon from '@material-ui/icons/Search'
 
 function Dashboard() {
 
@@ -18,6 +19,8 @@ function Dashboard() {
   const companydetails = useSelector(state => state.companydetails)
 
   const navigate = useNavigate();
+
+  const [resultsFilter, setresultsFilter] = useState("All");
 
   return (
     <div id='div_dashboard'>
@@ -107,6 +110,24 @@ function Dashboard() {
         <div className='div_mini_stats_section'>
           <div id='div_map_clickable_label' onClick={() => { navigate("/home/map") }}><LocationIcon style={{fontSize: "20px"}} /> View Live Tracking</div>
           <MainIndex />
+        </div>
+      </div>
+      <div id='div_activities_section'>
+        <div id='div_activities_section_main'>
+          <div id='div_activities_header'>
+            <p id='p_activities_label'>Activity</p>
+            <div id='span_search_activities_container'>
+              <input id='input_search_activities' placeholder='Search Activities' />
+              <button id='btn_search_activities'><SearchIcon /></button>
+            </div>
+          </div>
+          <div id='div_results_nav'>
+            <button className='btns_results_nav' style={{fontWeight: resultsFilter == "All"? "bold" : "normal"}} onClick={() => { setresultsFilter("All") }}>All</button>
+            <button className='btns_results_nav' style={{fontWeight: resultsFilter == "Recent"? "bold" : "normal"}} onClick={() => { setresultsFilter("Recent") }}>Recent</button>
+          </div>
+          <div id='div_results_holder'>
+            <p>No Recent Activities</p>
+          </div>
         </div>
       </div>
     </div>

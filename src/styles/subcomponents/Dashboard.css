@@ -11,6 +11,7 @@
     gap: 5px;
     align-items: center;
     overflow-y: auto;
+    padding-bottom: 20px;
 }
 
 #div_dashboard_header{
@@ -141,7 +142,7 @@
     gap: 5px;
     width: 100%;
     max-width: 220px;
-    padding-left: 5px;
+    padding-left: 0px;
     padding-right: 5px;
 }
 
@@ -297,6 +298,95 @@
     cursor: pointer;
 }
 
+#div_activities_section{
+    background-color: transparent;
+    margin-top: 0px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+#div_activities_section_main{
+    width: calc(100% - 30px);
+    min-height: 300px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px black;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+#div_activities_header{
+    background-color: transparent;
+}
+
+#p_activities_label{
+    padding-top: 15px;
+    padding-bottom: 0px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: bold;
+    color: #2F2F2F;
+}
+
+#span_search_activities_container{
+    width: 100%;
+    height: 35px;
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+    box-shadow: 0px 0px 2px black;
+    border-radius: 5px;
+}
+
+#input_search_activities{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: solid 0px black;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: calc(100% - 40px);
+}
+
+#btn_search_activities{
+    border: none;
+    width: 40px;
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+}
+
+#div_results_nav{
+    background-color: transparent;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.btns_results_nav{
+    width: 50px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    color: #2F2F2F;
+}
+
+#div_results_holder{
+    background-color: #D9D9D9;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+    font-size: 13px;
+    overflow-y: scroll;
+}
+
 @media screen and (max-width: 1150px) {
     .div_mini_stats_section:last-of-type{
         margin-top: 20px;
@@ -318,5 +408,7 @@
     .div_mini_stats_section:first-of-type{
         width: 100%;
         max-width: none;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 }
