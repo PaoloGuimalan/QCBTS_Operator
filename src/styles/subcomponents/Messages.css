@@ -1,0 +1,128 @@
+#div_messages{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#div_messages_container{
+    background-color: green;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#div_conversation_list{
+    background-color: #294072;
+    border-left: solid 2px #D9D9D9;
+    width: 100%;
+    max-width: 320px;
+    overflow-y: auto;
+}
+
+#div_conversation_section{
+    background-color: white;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+}
+
+#div_conversation_header{
+    /* background-color: green; */
+    background-color: transparent;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#div_messages_icon{
+    padding-left: 10px;
+    margin-top: 0px;
+}
+
+#p_messages_label{
+    margin: 0px;
+    font-size: 15px;
+    display: flex;
+    flex: 1;
+    padding-left: 5px;
+    margin-top: -5px;
+    color: white;
+    font-weight: bold;
+}
+
+#btn_new_message{
+    width: 50px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+#btn_new_message:hover{
+    /* border: solid 1px black; */
+    box-shadow: 0px 0px 2px black;
+}
+
+#div_input_search_section{
+    width: 100%;
+    height: 33px;
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+}
+
+#div_input_search_container{
+    background-color: transparent;
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 2px black;
+    border-radius: 5px;
+}
+
+#input_search_conversation{
+    border: none;
+    height: calc(100% - 2px);
+    width: calc(100% - 40px);
+    padding-left: 15px;
+    padding-right: 15px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#btn_search_conversation{
+    width: 40px;
+    height: 100%;
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+#div_convo_list_navs{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.btn_convo_list_navs{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
