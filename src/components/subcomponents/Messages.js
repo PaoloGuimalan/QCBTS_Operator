@@ -6,7 +6,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import RecentsIcon from '@material-ui/icons/History'
 import DriverIcon from '@material-ui/icons/DirectionsBus'
 import SystemAdminIcon from '@material-ui/icons/SupervisorAccount'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import ConversationList from './Messages/ConversationList'
 
 function Messages() {
 
@@ -53,6 +54,13 @@ function Messages() {
             <button className='btn_convo_list_navs' onClick={() => { setconversationFilter("Recents"); navigate("/home/messages/recents") }} ><RecentsIcon style={{color: conversationFilter == "Recents"? "#FFB905" : "#D9D9D9"}} /></button>
             <button className='btn_convo_list_navs' onClick={() => { setconversationFilter("Drivers"); navigate("/home/messages/da") }} ><DriverIcon style={{color: conversationFilter == "Drivers"? "#FFB905" : "#D9D9D9"}} /></button>
             <button className='btn_convo_list_navs' onClick={() => { setconversationFilter("SystemAdmins"); navigate("/home/messages/sa") }} ><SystemAdminIcon style={{color: conversationFilter == "SystemAdmins"? "#FFB905" : "#D9D9D9"}} /></button>
+          </div>
+          <div id='div_convo_list_layout'>
+            <Routes>
+              <Route path='/recents/*' element={<ConversationList convFilter="recents" filterType="recents" />} />
+              <Route path='/da/*' element={<ConversationList convFilter="da" filterType="drivers" />} />
+              <Route path='/sa/*' element={<ConversationList convFilter="sa" filterType="systemadmins" />} />
+            </Routes>
           </div>
         </div>
         <div id='div_conversation_section'>
