@@ -16,7 +16,7 @@ function Messages() {
   const params = useLocation()
   
   useEffect(() => {
-    if(params.pathname.split("/")[3] == undefined){
+    if(params.pathname.split("/")[3] == undefined || params.pathname.split("/")[3] == ""){
       navigate("/home/messages/recents")
     }
 
