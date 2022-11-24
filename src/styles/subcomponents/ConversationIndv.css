@@ -96,12 +96,13 @@
 .p_messages_indv{
     background-color: transparent;
     width: fit-content;
-    max-width: 100%;
+    max-width: 300px;
     min-width: 70px;
     padding: 10px;
     margin: 5px;
     box-shadow: 0px 0px 3px black;
     color: white;
+    text-align: left;
 }
 
 .p_messages_indv:last-of-type{
