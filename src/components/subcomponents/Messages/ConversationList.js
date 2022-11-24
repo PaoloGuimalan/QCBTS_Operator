@@ -84,7 +84,7 @@ function ConversationList({ convFilter, filterType }) {
                 <div id='div_indv_conversation_container'>
                     {conversations.conversations.map((cnv, i) => {
                         return(
-                            <Link to={`/home/messages/${convFilter}/${cnv.conversationID}`} key={i} className='link_indv_conversation'>
+                            <Link to={`/home/messages/${convFilter}/ex/${cnv.conversationID}`} key={i} className='link_indv_conversation'>
                                 <div className='div_extended_conversation_layout'>
                                     <div id='div_indv_conversation'>
                                         {conversations.profiles.map((prf, i) => {

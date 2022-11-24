@@ -8,6 +8,9 @@ import DriverIcon from '@material-ui/icons/DirectionsBus'
 import SystemAdminIcon from '@material-ui/icons/SupervisorAccount'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import ConversationList from './Messages/ConversationList'
+import ConversationIndv from './Messages/ConversationIndv'
+import DefaultDisplay from './Messages/DefaultDisplay'
+import NewMessage from './Messages/NewMessage'
 
 function Messages() {
 
@@ -42,7 +45,7 @@ function Messages() {
               <MessagesIcon style={{color: "white", fontSize: "22px"}} />
             </div>
             <p id='p_messages_label'>Messages</p>
-            <button id='btn_new_message'><NewMessageIcon style={{color: "#FFB905"}} /></button>
+            <button id='btn_new_message' onClick={() => { navigate(`/home/messages/${params.pathname.split("/")[3]}/newmessage`) }}><NewMessageIcon style={{color: "#FFB905"}} /></button>
           </div>
           <div id='div_input_search_section'>
             <div id='div_input_search_container'>
@@ -64,7 +67,15 @@ function Messages() {
           </div>
         </div>
         <div id='div_conversation_section'>
-          <p>Conversation</p>
+          <Routes>
+            <Route path={`/recents/newmessage`} element={<NewMessage convFilter="recents" filterType="recents" />} />
+            <Route path={`/da/newmessage`} element={<NewMessage convFilter="da" filterType="drivers" />} />
+            <Route path={`/sa/newmessage`} element={<NewMessage convFilter="sa" filterType="systemadmins" />} />
+            <Route path={`/${params.pathname.split("/")[3]}`} element={<DefaultDisplay />} />
+            <Route path={`/recents/ex/:conversationID`} element={<ConversationIndv convFilter="recents" filterType="recents" />} />
+            <Route path={`/da/ex/:conversationID`} element={<ConversationIndv convFilter="da" filterType="drivers" />} />
+            <Route path={`/sa/ex/:conversationID`} element={<ConversationIndv convFilter="sa" filterType="systemadmins" />} />
+          </Routes>
         </div>
       </div>
     </div>
