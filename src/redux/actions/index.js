@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_COMPANY_DETAILS, SET_CONVERSATIONS } from "../types"
+import { SET_AUTH_DETAILS, SET_COMPANY_DETAILS, SET_CONVERSATIONS, SET_MESSAGES } from "../types"
 
 export const authDetailsState = {
     userID: "",
@@ -44,6 +44,25 @@ export const setconversations = (state = conversationsState, action) => {
     switch(action.type){
         case SET_CONVERSATIONS:
             return action.conversations;
+        default:
+            return state;
+    }
+}
+
+export const messagesState = {
+    conversation: [],
+    userDetails: {
+        preview: "none",
+        userDisplayName: "",
+        userID: "",
+        userType: ""
+    }
+}
+
+export const setmessages = (state = messagesState, action) => {
+    switch(action.type){
+        case SET_MESSAGES:
+            return action.messages;
         default:
             return state;
     }

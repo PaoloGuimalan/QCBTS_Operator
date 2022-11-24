@@ -9,12 +9,14 @@ import { SET_CONVERSATIONS } from '../../../redux/types'
 import { conversationsState } from '../../../redux/actions'
 import LoadingIcon from '@material-ui/icons/Loop'
 import EmptyIcon from '@material-ui/icons/ChatBubbleOutline'
+import DefaultImg from '../../../resources/imgs/defaultimg.png'
 
 function ConversationList({ convFilter, filterType }) {
 
   const authdetails = useSelector(state => state.authdetails)
   const conversations = useSelector(state => state.conversations)
 
+  const [selectedConv, setselectedConv] = useState("none");
   const [loading, setloading] = useState(true);
 
   const dispatch = useDispatch()
@@ -84,17 +86,13 @@ function ConversationList({ convFilter, filterType }) {
                 <div id='div_indv_conversation_container'>
                     {conversations.conversations.map((cnv, i) => {
                         return(
-                            <Link to={`/home/messages/${convFilter}/ex/${cnv.conversationID}`} key={i} className='link_indv_conversation'>
+                            <Link to={`/home/messages/${convFilter}/ex/${cnv.conversationID}`} key={i} onClick={() => { setselectedConv(cnv.conversationID) }} className='link_indv_conversation' style={{backgroundColor: selectedConv == cnv.conversationID? "white" : "transparent", color: selectedConv == cnv.conversationID? "black" : "white"}}>
                                 <div className='div_extended_conversation_layout'>
                                     <div id='div_indv_conversation'>
                                         {conversations.profiles.map((prf, i) => {
                                                 return(
                                                     cnv.from.userID == prf.userID || cnv.to.userID == prf.userID? (
-                                                        <div
-                                                        style={{
-                                                            backgroundColor: `${getRandomColor()}`
-                                                        }}
-                                                        className='div_user_icon'>{prf.userDisplayName.split("")[0]}</div>
+                                                        <img src={prf.preview == "none"? DefaultImg : prf.preview} className='img_conversation_prompts' />
                                                     ) : null
                                                 )
                                             })}

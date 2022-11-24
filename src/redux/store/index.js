@@ -1,10 +1,11 @@
 import { createStore, combineReducers } from 'redux'
-import { setauthdetails, setcompanydetails, setconversations } from '../actions';
+import { setauthdetails, setcompanydetails, setconversations, setmessages } from '../actions';
 
 const combiner = combineReducers({
     authdetails: setauthdetails,
     companydetails: setcompanydetails,
-    conversations: setconversations
+    conversations: setconversations,
+    messages: setmessages
 });
 
 const store = createStore(combiner);

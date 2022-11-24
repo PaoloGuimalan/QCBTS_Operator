@@ -11,6 +11,7 @@ import ConversationList from './Messages/ConversationList'
 import ConversationIndv from './Messages/ConversationIndv'
 import DefaultDisplay from './Messages/DefaultDisplay'
 import NewMessage from './Messages/NewMessage'
+import DefaultImg from '../../resources/imgs/defaultimg.png'
 
 function Messages() {
 

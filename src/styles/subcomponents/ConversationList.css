@@ -26,6 +26,7 @@
 
 .div_extended_conversation_layout:hover{
     background-color: #325193;
+    color: white;
 }
 
 #div_indv_conversation{
@@ -53,6 +54,13 @@
     border: solid 1px grey;
     font-weight: bold;
     font-size: 17px;
+}
+
+.img_conversation_prompts{
+    width: 60px;
+    height: 60px;
+    min-height: 60px;
+    min-width: 60px;
 }
 
 .div_user_flexed{
