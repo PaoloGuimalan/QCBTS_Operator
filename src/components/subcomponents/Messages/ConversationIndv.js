@@ -9,9 +9,11 @@ import { URL } from '../../../json/urlconfig'
 import { useDispatch, useSelector } from 'react-redux'
 import { SET_MESSAGES } from '../../../redux/types'
 import { messagesState } from '../../../redux/actions'
+import { motion } from 'framer-motion'
 
 function ConversationIndv({convFilter, filterType}) {
 
+  const authdetails = useSelector(state => state.authdetails)
   const messages = useSelector(state => state.messages)
   const params = useParams()
   const dispatch = useDispatch()
@@ -64,10 +66,27 @@ function ConversationIndv({convFilter, filterType}) {
             </div>
         </div>
         <div id='div_conversationindv_chats'>
-            <p>Hello World</p>
+            {messages.conversation.map((chts, i) => {
+                return(
+                    <motion.p
+                    initial={{
+                        scale: 0.1,
+                        marginLeft: chts.from.userID == authdetails.userID? "auto" : "10px",
+                        backgroundColor: chts.from.userID == authdetails.userID? "#EBA400" : "#294072",
+                        borderRadius: chts.from.userID == authdetails.userID? "10px 0px 10px 10px" : "0px 10px 10px 10px"
+                    }}
+                    animate={{
+                        scale: 1,
+                        transition:{
+                          duration: 0.3
+                        }
+                    }}
+                    key={i} className='p_messages_indv'>{chts.content}</motion.p>
+                )
+            })}
         </div>
         <div id='div_conversationindv_input'>
-            <input type='text' placeholder='Type something...' id='input_message' />
+            <input type='text' placeholder='Type a message here...' id='input_message' />
             <div id='div_buttons_message'>
                 <button className='btns_message'><AttachIcon style={{color: "#2F2F2F"}} /></button>
                 <button className='btns_message'><SendIcon style={{color: "#EBA400"}} /></button>
