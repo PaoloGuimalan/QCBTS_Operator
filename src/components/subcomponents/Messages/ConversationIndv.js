@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import "../../../styles/subcomponents/ConversationIndv.css"
 import SendIcon from '@material-ui/icons/Send'
@@ -17,6 +17,10 @@ function ConversationIndv({convFilter, filterType}) {
   const messages = useSelector(state => state.messages)
   const params = useParams()
   const dispatch = useDispatch()
+
+  let cancelAxios;
+
+  const scrollHeightDiv = useRef(null);
   
   useEffect(() => {
     // console.log(params)
@@ -24,8 +28,50 @@ function ConversationIndv({convFilter, filterType}) {
 
     return () => {
         dispatch({ type: SET_MESSAGES, messages: messagesState })
+        cancelAxios.cancel();
     }
-  },[params])
+  },[params.conversationID])
+
+  const subscribeMessagesConvo = () => {
+    cancelAxios = undefined
+    if(typeof cancelAxios != typeof undefined){
+        cancelAxios.cancel()
+        subscribeMessagesConvo()
+    }
+    else
+    {
+        cancelAxios = Axios.CancelToken.source()
+        Axios.get(`${URL}/messages/subscribeMessagesConvoCompanyAdmin`, {
+          headers:{
+            "x-access-token": localStorage.getItem("token"),
+            "Access-Control-Allow-Origin": "*"
+          },
+          cancelToken: cancelAxios.token
+        }).then((response) => {
+          if(response.data.status){
+            //run init commands
+            // console.log(response.data.result.message)
+            cancelAxios = undefined
+            initConversation()
+          }
+          else{
+            //also run init commands
+            // cancelAxios()
+            // subscribeMessages()
+            initConversation()
+          }
+        }).catch((err) => {
+          // cancelAxios()
+          // subscribeMessages()
+          if(err.message != 'canceled'){
+            cancelAxios = undefined;
+            // initConversation()
+            // console.log(err)
+          }
+          // console.log(err)
+        })
+    }
+  }
 
   const initConversation = () => {
     Axios.get(`${URL}/messages/initConversationCompany/${params.conversationID}`, {
@@ -36,13 +82,25 @@ function ConversationIndv({convFilter, filterType}) {
         if(response.data.status){
             // console.log(response.data.result)
             dispatch({ type: SET_MESSAGES, messages: response.data.result })
+            subscribeMessagesConvo()
+            scrollToBottom()
         }
         else{
             console.log(response.data.result)
+            subscribeMessagesConvo()
         }
     }).catch((err) => {
         console.log(err)
     })
+  }
+
+  useEffect(() => {
+    // console.log(scrollHeightDiv.current)
+    scrollToBottom()
+  },[params.conversationID])
+
+  const scrollToBottom = () => {
+    scrollHeightDiv.current.scrollTo(0, scrollHeightDiv.current.scrollHeight)
   }
 
   return (
@@ -65,7 +123,7 @@ function ConversationIndv({convFilter, filterType}) {
                 <p>Info</p>
             </div>
         </div>
-        <div id='div_conversationindv_chats'>
+        <div id='div_conversationindv_chats' ref={scrollHeightDiv}>
             {messages.conversation.map((chts, i) => {
                 return(
                     <motion.p

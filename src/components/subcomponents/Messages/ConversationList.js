@@ -22,14 +22,58 @@ function ConversationList({ convFilter, filterType }) {
   const dispatch = useDispatch()
   const params = useLocation();
 
+  let cancelAxios;
+
   useEffect(() => {
     initConversationList()
 
     return () => {
         setloading(true)
         dispatch({ type: SET_CONVERSATIONS, conversations: conversationsState })
+        cancelAxios.cancel();
     }
   },[params.pathname.split("/")[3]])
+
+  const subscribeMessagesCompany = () => {
+    cancelAxios = undefined
+    if(typeof cancelAxios != typeof undefined){
+        cancelAxios.cancel()
+        subscribeMessagesCompany()
+    }
+    else
+    {
+        cancelAxios = Axios.CancelToken.source()
+        Axios.get(`${URL}/messages/subscribeMessagesCompanyAdmin`, {
+          headers:{
+            "x-access-token": localStorage.getItem("token"),
+            "Access-Control-Allow-Origin": "*"
+          },
+          cancelToken: cancelAxios.token
+        }).then((response) => {
+          if(response.data.status){
+            //run init commands
+            // console.log(response.data.result.message)
+            cancelAxios = undefined
+            initConversationList()
+          }
+          else{
+            //also run init commands
+            // cancelAxios()
+            // subscribeMessages()
+            initConversationList()
+          }
+        }).catch((err) => {
+          // cancelAxios()
+          // subscribeMessages()
+          if(err.message != 'canceled'){
+            cancelAxios = undefined;
+            initConversationList()
+            // console.log(err)
+          }
+          // console.log(err)
+        })
+    }
+  }
 
   const initConversationList = () => {
     Axios.get(`${URL}/messages/caconversationlist/${filterType}`, {
@@ -41,9 +85,11 @@ function ConversationList({ convFilter, filterType }) {
             // console.log(response.data.result)
             dispatch({ type: SET_CONVERSATIONS, conversations: response.data.result })
             setloading(false)
+            subscribeMessagesCompany()
         }
         else{
             console.log(response.data.result)
+            subscribeMessagesCompany()
         }
     }).catch((err) => {
         console.log(err)
@@ -92,7 +138,7 @@ function ConversationList({ convFilter, filterType }) {
                                         {conversations.profiles.map((prf, i) => {
                                                 return(
                                                     cnv.from.userID == prf.userID || cnv.to.userID == prf.userID? (
-                                                        <img src={prf.preview == "none"? DefaultImg : prf.preview} className='img_conversation_prompts' />
+                                                        <img key={i} src={prf.preview == "none"? DefaultImg : prf.preview} className='img_conversation_prompts' />
                                                     ) : null
                                                 )
                                             })}

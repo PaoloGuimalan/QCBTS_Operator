@@ -20,6 +20,7 @@ import Map from '../subcomponents/Map';
 import DriversAccount from '../subcomponents/DriversAccount';
 import BusManagement from '../subcomponents/BusManagement';
 import Account from '../subcomponents/Account';
+import { playSound } from '../../json/sounds';
 
 function Home() {
 
@@ -30,6 +31,8 @@ function Home() {
   const navigate = useNavigate()
 
   const [navstate, setnavstate] = useState("home")
+
+  let cancelAxios;
 
   useEffect(() => {
     getCompanyData()
@@ -49,6 +52,56 @@ function Home() {
     }
     // console.log(path.pathname.split("/")[2])
   },[path])
+
+  useEffect(() => {
+    subscribeMessagesAlert()
+
+    return () => {
+      cancelAxios.cancel()
+    }
+  },[])
+
+  const subscribeMessagesAlert = () => {
+    cancelAxios = undefined
+    if(typeof cancelAxios != typeof undefined){
+        cancelAxios.cancel()
+        subscribeMessagesAlert()
+    }
+    else
+    {
+        cancelAxios = Axios.CancelToken.source()
+        Axios.get(`${URL}/messages/subscribeAlertMessageCompanyAdmin`, {
+          headers:{
+            "x-access-token": localStorage.getItem("token"),
+            "Access-Control-Allow-Origin": "*"
+          },
+          cancelToken: cancelAxios.token
+        }).then((response) => {
+          if(response.data.status){
+            //run init commands
+            // console.log(response.data.result.message)
+            playSound()
+            cancelAxios = undefined
+            subscribeMessagesAlert()
+          }
+          else{
+            //also run init commands
+            // cancelAxios()
+            // subscribeMessages()
+            subscribeMessagesAlert()
+          }
+        }).catch((err) => {
+          // cancelAxios()
+          // subscribeMessages()
+          if(err.message != 'canceled'){
+            cancelAxios = undefined;
+            subscribeMessagesAlert()
+            // console.log(err)
+          }
+          // console.log(err)
+        })
+    }
+  }
 
   const getCompanyData = () => {
     if(authdetails.companyID != ""){
