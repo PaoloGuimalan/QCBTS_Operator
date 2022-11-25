@@ -65,6 +65,7 @@ function ConversationIndv({convFilter, filterType}) {
           // subscribeMessages()
           if(err.message != 'canceled'){
             cancelAxios = undefined;
+            subscribeMessagesConvo()
             // initConversation()
             // console.log(err)
           }
