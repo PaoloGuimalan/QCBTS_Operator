@@ -43,7 +43,7 @@ function ConversationList({ convFilter, filterType }) {
     else
     {
         cancelAxios = Axios.CancelToken.source()
-        Axios.get(`${URL}/messages/subscribeMessagesCompanyAdmin`, {
+        Axios.get(`${URL}/messages/subscribeMessages`, {
           headers:{
             "x-access-token": localStorage.getItem("token"),
             "Access-Control-Allow-Origin": "*"

@@ -70,7 +70,7 @@ function Home() {
     else
     {
         cancelAxios = Axios.CancelToken.source()
-        Axios.get(`${URL}/messages/subscribeAlertMessageCompanyAdmin`, {
+        Axios.get(`${URL}/messages/subscribeAlertMessage`, {
           headers:{
             "x-access-token": localStorage.getItem("token"),
             "Access-Control-Allow-Origin": "*"
