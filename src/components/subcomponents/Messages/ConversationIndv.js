@@ -21,6 +21,40 @@ function ConversationIndv({convFilter, filterType}) {
   let cancelAxios;
 
   const scrollHeightDiv = useRef(null);
+
+  const [content, setcontent] = useState("");
+
+  const sendMessage = () => {
+    if(content.trim().length == 0){
+      alert("Empty")
+    }
+    else{
+      // alert("Okay")
+      Axios.post(`${URL}/messages/sendMessage`,{
+        conversationID: params.conversationID,
+        content: content,
+        contentType: "text",
+        toID: messages.userDetails.userID,
+        toType: filterType,
+        filterType: filterType
+      },{
+        headers:{
+          "x-access-token": localStorage.getItem("token")
+        }
+      }).then((response) => {
+        if(response.data.status){
+          //success
+          setcontent("")
+          // initMessagesList()
+        }
+        else{
+          console.log(response.data.result.message)
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+  }
   
   useEffect(() => {
     // console.log(params)
@@ -145,10 +179,10 @@ function ConversationIndv({convFilter, filterType}) {
             })}
         </div>
         <div id='div_conversationindv_input'>
-            <input type='text' placeholder='Type a message here...' id='input_message' />
+            <input type='text' value={content} onChange={(e) => { setcontent(e.target.value) }} placeholder='Type a message here...' id='input_message' />
             <div id='div_buttons_message'>
                 <button className='btns_message'><AttachIcon style={{color: "#2F2F2F"}} /></button>
-                <button className='btns_message'><SendIcon style={{color: "#EBA400"}} /></button>
+                <button className='btns_message' onClick={() => { sendMessage() }}><SendIcon style={{color: "#EBA400"}} /></button>
             </div>
         </div>
     </div>
