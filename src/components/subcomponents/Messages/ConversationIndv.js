@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SET_MESSAGES } from '../../../redux/types'
 import { messagesState } from '../../../redux/actions'
 import { motion } from 'framer-motion'
+import MoreIcon from '@material-ui/icons/MoreHoriz'
 
 function ConversationIndv({convFilter, filterType}) {
 
@@ -155,10 +156,11 @@ function ConversationIndv({convFilter, filterType}) {
             </div>
             <div id='div_flexed_area_header' />
             <div>
-                <p>Info</p>
+              <button id='btn_more_conv'><MoreIcon style={{fontSize: "25px"}} /></button>
             </div>
         </div>
         <div id='div_conversationindv_chats' ref={scrollHeightDiv}>
+          <div id='div_padding_setter' ></div>
             {messages.conversation.map((chts, i) => {
                 return(
                     <motion.p

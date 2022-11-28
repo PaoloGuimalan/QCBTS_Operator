@@ -11,6 +11,14 @@
     display: flex;
     padding-left: 10px;
     padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#div_padding_setter{
+    min-height: 300px;
+    width: 100%;
+    /* background-color: green; */
 }
 
 #div_conversationindv_chats{
@@ -20,7 +28,7 @@
     overflow-y: scroll;
     justify-content: flex-start;
     background-color: transparent;
-    padding-top: 35%;
+    /* padding-top: 35%; */
 }
 
 #div_conversationindv_input{
@@ -109,4 +117,15 @@
 
 .p_messages_indv:last-of-type{
     margin-bottom: 15px;
+}
+
+#btn_more_conv{
+    background-color: #ffbf00;
+    border-radius: 40px;
+    height: 40px;
+    width: 40px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0px 0px 2px black;
 }
