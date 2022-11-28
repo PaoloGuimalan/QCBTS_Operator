@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_COMPANY_DETAILS, SET_CONVERSATIONS, SET_MESSAGES } from "../types"
+import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_COMPANY_DETAILS, SET_CONVERSATIONS, SET_MESSAGES } from "../types"
 
 export const authDetailsState = {
     userID: "",
@@ -63,6 +63,15 @@ export const setmessages = (state = messagesState, action) => {
     switch(action.type){
         case SET_MESSAGES:
             return action.messages;
+        default:
+            return state;
+    }
+}
+
+export const setbusstopslist = (state = [], action) => {
+    switch(action.type){
+        case SET_BUS_STOPS_LIST:
+            return action.busstopslist;
         default:
             return state;
     }

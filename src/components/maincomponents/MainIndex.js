@@ -7,8 +7,12 @@ import IconsDisplay from '../../json/IconsDisplay';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion'
 import { URL } from '../../json/urlconfig'
+import OpennedIcon from '../../resources/imgs/OpenStop.png'
+import ClosedIcon from '../../resources/imgs/ClosedStop.png'
 
 function Map(){
+
+  const busstopslist = useSelector(state => state.busstopslist);
 
   const dispatch = useDispatch()
 
@@ -44,6 +48,58 @@ function Map(){
         mapTypeId: 'satellite' //roadmap, satellite, terrain, hybrid
       }}
     >
+      {busstopslist.map((data, i) => {
+        return(
+          <Marker
+            icon={{
+              url: data.status? OpennedIcon : ClosedIcon,
+              anchor: new google.maps.Point(25, 25),
+              scaledSize: new google.maps.Size(25, 25),
+            }}
+            // onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: data.busStopID }) }}
+            key={i}
+            position={{lat: parseFloat(data.coordinates.latitude), lng: parseFloat(data.coordinates.longitude)}}
+          >
+            {/* {selectedMarker == data.busStopID? (
+              <InfoWindow onCloseClick={() => {
+                dispatch({ type: SET_SELECTED_MARKER, selectedmarker: null })
+              }}>
+                <div className='div_infowindow_existing_bs'>
+                  <p id='p_stationName'>{data.stationName}</p>
+                  <table id='table_existing_bs'>
+                    <tbody>
+                      <tr>
+                        <th>Bus Stop ID</th>
+                        <td>{data.busStopID}</td>
+                      </tr>
+                      <tr>
+                        <th>Status</th>
+                        <motion.td
+                        animate={{
+                          color: data.status? "lime" : "red"
+                        }}
+                        >{data.status? "Open" : "Closed"}</motion.td>
+                      </tr>
+                      <tr>
+                        <th>Date Added</th>
+                        <td>{data.dateAdded}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div id='div_btns_infowinfow'>
+                    <motion.button
+                    animate={{
+                      backgroundColor: data.status? "red" : "lime"
+                    }}
+                    className='btn_infoWindow_existing_bs' onClick={() => { updateBSStatus(data.busStopID, data.status? false : true) }}>{data.status? "Close Station" : "Open Station"}</motion.button>
+                    <button className='btn_infoWindow_existing_bs' onClick={() => { setSelectedDetailsWindow(data.busStopID) }}>View Details</button>
+                  </div>
+                </div>
+              </InfoWindow>
+            ) : null} */}
+          </Marker>
+        )
+      })}
       <Polygon
         draggable={false}
         editable={false}
