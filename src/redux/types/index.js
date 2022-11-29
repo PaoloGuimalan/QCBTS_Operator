@@ -5,3 +5,4 @@ export const SET_CONVERSATIONS = 'SET_CONVERSATIONS';
 export const SET_MESSAGES = 'SET_MESSAGES';
 
 export const SET_BUS_STOPS_LIST = 'SET_BUS_STOPS_LIST';
+export const SET_MAP_MODE = 'SET_MAP_MODE';

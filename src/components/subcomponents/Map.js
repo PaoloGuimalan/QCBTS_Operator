@@ -118,6 +118,46 @@ function Map() {
             </li>
           </nav>
         </motion.div>
+        <motion.div id='div_routes_window' className='absolute_divs_map'>
+          <div id='div_routes_window_header'>
+            <p id='p_routes_window_label'>Routes</p>
+            <button id='btn_bus_stops_close' ><CloseIcon /></button>            
+          </div>
+          <div id='div_routes_window_sections_holder'>
+            <div className='div_routes_window_sections'>
+              <div id='div_bus_stops_list'>
+                    <div id='div_bus_stops_list_container'>
+                      <table id='tbl_bus_stops_list'>
+                        <tbody>
+                          <tr id='tr_header_bus_stops_list'>
+                            <th className='th_header_bus_stops_list'>Route ID</th>
+                            <th className='th_header_bus_stops_list'>Route Name</th>
+                          </tr>
+                          <tr className='tr_content_bus_stops_list'>
+                              <td>Hello</td>
+                              <td>World</td>
+                          </tr>
+                          {/* {busstopslist.map((list, i) => {
+                            return(
+                              <tr onClick={() => {
+                                dispatch({ type: SET_CENTER_MAP, centermap: { lat: parseFloat(list.coordinates.latitude), lng: parseFloat(list.coordinates.longitude) }})
+                                dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.busStopID })
+                              }} key={i} className='tr_content_bus_stops_list'>
+                                <td>{list.busStopID}</td>
+                                <td>{list.stationName}</td>
+                              </tr>
+                            )
+                          })} */}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+            </div>
+            <div className='div_routes_window_sections'>
+              <p>Routes</p>
+            </div>
+          </div>
+        </motion.div>
       <MainIndex />
     </div>
   )
