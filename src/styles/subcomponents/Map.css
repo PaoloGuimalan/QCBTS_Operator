@@ -92,7 +92,7 @@
 #div_routes_window{
     background-color: white;
     bottom: 20px;
-    right: 10px;
+    right: -470px;
     height: 100%;
     width: 100%;
     max-height: 300px;
@@ -110,6 +110,7 @@
     justify-content: space-between;
     padding-left: 10px;
     padding-right: 10px;
+    box-shadow: 0px 0px 2px black;
 }
 
 #div_routes_window_sections_holder{
@@ -126,12 +127,33 @@
 }
 
 .div_routes_window_sections:first-of-type{
-    background-color: green;
+    background-color: transparent;
 }
 
 .div_routes_window_sections:last-of-type{
-    background-color: aqua;
+    background-color: transparent;
+    height: 100%;
+    max-height: 255px;
+    overflow-y: auto;
 }
+
+.div_routes_window_sections::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .div_routes_window_sections::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  .div_routes_window_sections::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  .div_routes_window_sections::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
 
 #btn_bus_stops_close{
     background-color: transparent;
@@ -220,4 +242,117 @@
 
 .tr_content_bus_stops_list:hover{
     background-color: grey;
+}
+
+#div_create_route_header{
+    background-color: transparent;
+    display: flex;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#p_create_route_label{
+    margin: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#div_create_route_form{
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+}
+
+#p_create_route_name_label{
+    text-align: left;
+    margin: 0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.inputs_create_route_classifier{
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+    background-color: black;
+    color: white;
+    font-size: 13px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#div_route_list_container{
+    background-color: transparent;
+    display: flex;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+    margin-top: 10px;
+    flex-direction: column;
+}
+
+#p_route_list_label{
+    margin: 0px;
+    font-size: 13px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+#div_pending_route_list{
+    background-color: black;
+    border-radius: 5px;
+    color: white;
+}
+
+#tbl_pending_route_list{
+    width: 100%;
+}
+
+.th_pending_route_list{
+    font-size: 12px;
+    width: 50%;
+    height: 25px;
+}
+
+#tbl_pending_route_list{
+    border-collapse: collapse;
+}
+
+.td_content_route_indv:first-of-type{
+    font-size: 11px;
+}
+
+.td_content_route_indv:last-of-type{
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+}
+
+#div_navigations_create_route{
+    background-color: transparent;
+    margin-top: 10px;
+    display: flex;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.btns_navigations_create_route{
+    width: 70px;
+    height: 30px;
+    font-size: 11px;
+    border-radius: 2px;
+    border: none;
+    box-shadow: 0px 0px 2px black;
+    cursor: pointer;
 }

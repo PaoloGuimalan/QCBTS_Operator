@@ -9,10 +9,15 @@ import { motion } from 'framer-motion'
 import { URL } from '../../json/urlconfig'
 import OpennedIcon from '../../resources/imgs/OpenStop.png'
 import ClosedIcon from '../../resources/imgs/ClosedStop.png'
+import { SET_ROUTE_MAKER_LIST, SET_SELECTED_MARKER } from '../../redux/types';
 
 function Map(){
 
+  const routemakerlist = useSelector(state => state.routemakerlist);
   const busstopslist = useSelector(state => state.busstopslist);
+  const mapmode = useSelector(state => state.mapmode);
+  const selectedmarker = useSelector(state => state.selectedmarker);
+  const routepath = useSelector(state => state.routepath);
 
   const dispatch = useDispatch()
 
@@ -30,6 +35,20 @@ function Map(){
       // dispatch({ type: SET_CENTER_MAP, centermap: { lat: 14.647296, lng: 121.061376 }})
     }
   },[])
+
+  const routeCallAPI = (data) => {
+    if(mapmode == "routes"){
+      Axios.get(`https://us1.locationiq.com/v1/directions/driving/-0.11814675,51.512788;-0.12694005,51.507848?key=pk.2dd9b328ed0803c41448fc0c3ba30cd4&steps=true&alternatives=true&geometries=polyline&overview=full`)
+      .then((response) => {
+        // console.log(response.data);
+        // setcenterMap({ lat: parseFloat(response.data.lat), lng: parseFloat(response.data.lon) })
+        console.log(response.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  }
 
   return(
     <GoogleMap
@@ -56,11 +75,11 @@ function Map(){
               anchor: new google.maps.Point(25, 25),
               scaledSize: new google.maps.Size(25, 25),
             }}
-            // onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: data.busStopID }) }}
+            onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: data.busStopID }) }}
             key={i}
             position={{lat: parseFloat(data.coordinates.latitude), lng: parseFloat(data.coordinates.longitude)}}
           >
-            {/* {selectedMarker == data.busStopID? (
+            {selectedmarker == data.busStopID? (
               <InfoWindow onCloseClick={() => {
                 dispatch({ type: SET_SELECTED_MARKER, selectedmarker: null })
               }}>
@@ -89,14 +108,26 @@ function Map(){
                   <div id='div_btns_infowinfow'>
                     <motion.button
                     animate={{
-                      backgroundColor: data.status? "red" : "lime"
+                      backgroundColor: "lime",
+                      display: mapmode == "routes"? "block" : "none"
                     }}
-                    className='btn_infoWindow_existing_bs' onClick={() => { updateBSStatus(data.busStopID, data.status? false : true) }}>{data.status? "Close Station" : "Open Station"}</motion.button>
-                    <button className='btn_infoWindow_existing_bs' onClick={() => { setSelectedDetailsWindow(data.busStopID) }}>View Details</button>
+                    className='btn_infoWindow_existing_bs' onClick={() => { 
+                      dispatch({ type: SET_ROUTE_MAKER_LIST, routemakerlist: [
+                      ...routemakerlist,
+                      {
+                        pendingID: Math.floor(Math.random() * 100000),
+                        stationName: data.stationName,
+                        coordinates: [
+                          data.coordinates.longitude,
+                          data.coordinates.latitude
+                        ]
+                      }] }) 
+                    }}>{routemakerlist.length == 0? "Create Route" : "Add to Routes"}</motion.button>
+                    <button className='btn_infoWindow_existing_bs' onClick={() => {  }}>View Details</button>
                   </div>
                 </div>
               </InfoWindow>
-            ) : null} */}
+            ) : null}
           </Marker>
         )
       })}
@@ -109,6 +140,17 @@ function Map(){
           strokeColor: "red"
         }}
       />
+      {routepath.length != 0? (
+        <Polygon
+          draggable={false}
+          editable={false}
+          paths={[...routepath, ...routepath]}
+          options={{
+            fillColor: "transparent",
+            strokeColor: "orange"
+          }}
+        />
+      ) : null}
     </GoogleMap>
   )
 }
