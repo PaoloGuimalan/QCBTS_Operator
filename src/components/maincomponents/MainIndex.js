@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import '../../styles/maincomponents/MainIndex.css'
-import { GoogleMap, withGoogleMap, withScriptjs, Polygon, InfoWindow, Marker } from 'react-google-maps';
+import { GoogleMap, withGoogleMap, withScriptjs, Polygon, InfoWindow, Marker, Polyline } from 'react-google-maps';
 import Axios from 'axios'
 import QCPath from '../../json/QCPath.json'
 import IconsDisplay from '../../json/IconsDisplay';
@@ -18,6 +18,7 @@ function Map(){
   const mapmode = useSelector(state => state.mapmode);
   const selectedmarker = useSelector(state => state.selectedmarker);
   const routepath = useSelector(state => state.routepath);
+  const routestatusloader = useSelector(state => state.routestatusloader);
 
   const dispatch = useDispatch()
 
@@ -72,7 +73,7 @@ function Map(){
           <Marker
             icon={{
               url: data.status? OpennedIcon : ClosedIcon,
-              anchor: new google.maps.Point(25, 25),
+              anchor: new google.maps.Point(15, 15),
               scaledSize: new google.maps.Size(25, 25),
             }}
             onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: data.busStopID }) }}
@@ -122,6 +123,7 @@ function Map(){
                           data.coordinates.latitude
                         ]
                       }] }) 
+                      dispatch({ type: SET_SELECTED_MARKER, selectedmarker: null })
                     }}>{routemakerlist.length == 0? "Create Route" : "Add to Routes"}</motion.button>
                     <button className='btn_infoWindow_existing_bs' onClick={() => {  }}>View Details</button>
                   </div>
@@ -141,13 +143,14 @@ function Map(){
         }}
       />
       {routepath.length != 0? (
-        <Polygon
+        <Polyline
           draggable={false}
           editable={false}
-          paths={[...routepath, ...routepath]}
+          path={routepath}
           options={{
             fillColor: "transparent",
-            strokeColor: "orange"
+            strokeColor: "orange",
+            strokeWeight: 4
           }}
         />
       ) : null}

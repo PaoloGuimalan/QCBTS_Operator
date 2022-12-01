@@ -1,4 +1,4 @@
-import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_COMPANY_DETAILS, SET_CONVERSATIONS, SET_MAP_MODE, SET_MESSAGES, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_SELECTED_MARKER } from "../types"
+import { SET_AUTH_DETAILS, SET_BUS_STOPS_LIST, SET_COMPANY_DETAILS, SET_CONVERSATIONS, SET_MAP_MODE, SET_MESSAGES, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SELECTED_MARKER } from "../types"
 
 export const authDetailsState = {
     userID: "",
@@ -108,6 +108,20 @@ export const setroutepath = (state = [], action) => {
     switch(action.type){
         case SET_ROUTE_PATH:
             return action.routepath;
+        default:
+            return state;
+    }
+}
+
+export const routestatusloaderState = {
+    loading: false,
+    percent: 0,
+}
+
+export const setroutestatusloader = (state = routestatusloaderState, action) => {
+    switch(action.type){
+        case SET_ROUTE_STATUS_LOADER:
+            return action.routestatusloader;
         default:
             return state;
     }

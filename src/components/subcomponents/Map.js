@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
-import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH } from '../../redux/types'
+import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER } from '../../redux/types'
 import { URL } from '../../json/urlconfig'
 
 function Map() {
@@ -17,6 +17,7 @@ function Map() {
   const mapmode = useSelector(state => state.mapmode);
   const routemakerlist = useSelector(state => state.routemakerlist);
   const routepath = useSelector(state => state.routepath);
+  const routestatusloader = useSelector(state => state.routestatusloader);
 
   let routepathholder = [];
   let routepathdeconstruct = [];
@@ -123,6 +124,7 @@ function Map() {
           //   // console.log(`${mps[0][0]} | ${mps[0][1]} || ${mps[1][0]} | ${mps[1][1]}`)
           // })
           directionsAPI(paringCoordinates, 0, pendingCoordinates.length - 1)
+          dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: true, percentage: 0 } })
           // console.log(paringCoordinates)
         }
       })
@@ -147,7 +149,8 @@ function Map() {
       .then((response) => {
         // console.log(response.data);
         // setcenterMap({ lat: parseFloat(response.data.lat), lng: parseFloat(response.data.lon) })
-        console.log(`${currentIndex} | ${indexCounter} | ${arraylength}`)
+        // console.log(`${currentIndex} | ${indexCounter} | ${arraylength}`)
+        dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: true, percentage: indexCounter / arraylength * 100 } })
         // console.log(response.data)
         // console.log(response.data.routes[0].legs[0])
         // dispatch({ type: SET_ROUTE_PATH, routepath: [
@@ -171,14 +174,21 @@ function Map() {
           setTimeout(() => {
             // console.log(routepathdeconstructlocation)
             dispatch({ type: SET_ROUTE_PATH, routepath: routepathdeconstructlocation })
+            dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: false, percentage: 0 } })
           },2000)
-          console.log("Done")
+          // console.log("Done")
+          dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: true, percentage: indexCounter / arraylength * 100 } })
         }
       })
       .catch((err) => {
         console.log(err.message);
       })
     }, 5000)
+  }
+
+  const clearPendingRouteData = () => {
+    dispatch({ type: SET_ROUTE_MAKER_LIST, routemakerlist: [] })
+    dispatch({ type: SET_ROUTE_PATH, routepath: [] })
   }
 
   return (
@@ -217,7 +227,30 @@ function Map() {
         }}
         id='div_routes_window' className='absolute_divs_map'>
           <div id='div_routes_window_header'>
-            <p id='p_routes_window_label'>Routes</p>
+            <div id='p_routes_window_label'>
+              <span className='span_inside_routes_window_label'>Routes | </span>
+              {routestatusloader.loading? (
+                <>
+                  <span className='span_inside_routes_window_label'>
+                    <div id='div_outside_bar'>
+                      {/* <span id='span_status_loader'>Hello</span> */}
+                      <motion.div
+                      animate={{
+                        width: `${routestatusloader.percentage}%`,
+                        transition:{
+                          bounce: 0,
+                          duration: 0.5
+                        }
+                      }}
+                      id='div_inside_bar'>&#8203;</motion.div>
+                    </div>
+                  </span>
+                  <span id='span_status_loader'>...Generating Route Preview</span>
+                </>
+              ) : (
+                <span id='span_status_loader'>No Actions</span>
+              )}
+            </div>
             <button id='btn_bus_stops_close' onClick={() => { dispatch({ type: SET_MAP_MODE, mapmode: "none" }) }}><CloseIcon /></button>            
           </div>
           <div id='div_routes_window_sections_holder'>
@@ -290,7 +323,7 @@ function Map() {
               <div id='div_navigations_create_route'>
                 <button className='btns_navigations_create_route' onClick={() => { routeCallAPI() }}>Preview Route</button>
                 <button className='btns_navigations_create_route'>Save Route</button>
-                <button className='btns_navigations_create_route'>Clear</button>
+                <button className='btns_navigations_create_route' onClick={() => { clearPendingRouteData() }}>Clear</button>
               </div>
             </div>
           </div>
