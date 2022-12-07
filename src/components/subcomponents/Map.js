@@ -8,8 +8,9 @@ import CloseIcon from '@material-ui/icons/Close'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
-import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER } from '../../redux/types'
+import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH } from '../../redux/types'
 import { URL } from '../../json/urlconfig'
+import { savedroutepathState } from '../../redux/actions'
 
 function Map() {
 
@@ -18,12 +19,14 @@ function Map() {
   const routemakerlist = useSelector(state => state.routemakerlist);
   const routepath = useSelector(state => state.routepath);
   const routestatusloader = useSelector(state => state.routestatusloader);
+  const routelist = useSelector(state => state.routelist)
 
   let routepathholder = [];
   let routepathdeconstruct = [];
   let routepathdeconstructlocation = [];
 
   const [menutrigger, setmenutrigger] = useState(false)
+  const [routename, setroutename] = useState("");
 
   const dispatch = useDispatch()
 
@@ -32,11 +35,32 @@ function Map() {
   useEffect(() => {
 
     initBusStopsData()
+    initRoutesList()
 
     return () => {
         cancelAxios.cancel();
+        dispatch({ type: SET_SAVED_ROUTE_PATH, savedroutepath: savedroutepathState })
+        dispatch({ type: SET_MAP_MODE, mapmode: "none"})
     }
   },[])
+
+  const initRoutesList = () => {
+    Axios.get(`${URL}/company/routesList`, {
+      headers:{
+        "x-access-token": localStorage.getItem("token")
+      }
+    }).then((response) => {
+      if(response.data.status){
+        // console.log(response.data.result)
+        dispatch({ type: SET_ROUTE_LIST, routelist: response.data.result })
+      }
+      else{
+        console.log(response.data.result.message)
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   const initBusStopsData = () => {
     Axios.get(`${URL}/company/enabledBusStops`, {
@@ -98,36 +122,41 @@ function Map() {
 
   const routeCallAPI = () => {
     if(mapmode == "routes"){
-      let pendingCoordinates = []
-      let paringCoordinates = []
+      if(routemakerlist.length > 1){
+        let pendingCoordinates = []
+        let paringCoordinates = []
 
-      routemakerlist.map((rtlst, i) => {
-        if(i != 0){
-          paringCoordinates.push([
-            // routemakerlist[i - 1].pendingID,
-            routemakerlist[i - 1].coordinates,
-            // rtlst.pendingID,
-            rtlst.coordinates
-          ])
-        }
-        pendingCoordinates.push(rtlst.coordinates)
+        routemakerlist.map((rtlst, i) => {
+          if(i != 0){
+            paringCoordinates.push([
+              // routemakerlist[i - 1].pendingID,
+              routemakerlist[i - 1].coordinates,
+              // rtlst.pendingID,
+              rtlst.coordinates
+            ])
+          }
+          pendingCoordinates.push(rtlst.coordinates)
 
-        if(routemakerlist.length - 1 == i){
-          // console.log(paringCoordinates)
-          // paringCoordinates.map((mps, i) => {
-          //   // setTimeout(() => {
-          //   //   directionsAPI(mps[0][0],mps[0][1],mps[1][0],mps[1][1])
-          //   // }, 15000)
-          //   setTimeout(() => {
-          //     factoryFunc(mps[0][0],mps[0][1],mps[1][0],mps[1][1])
-          //   },5000)
-          //   // console.log(`${mps[0][0]} | ${mps[0][1]} || ${mps[1][0]} | ${mps[1][1]}`)
-          // })
-          directionsAPI(paringCoordinates, 0, pendingCoordinates.length - 1)
-          dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: true, percentage: 0 } })
-          // console.log(paringCoordinates)
-        }
-      })
+          if(routemakerlist.length - 1 == i){
+            // console.log(paringCoordinates)
+            // paringCoordinates.map((mps, i) => {
+            //   // setTimeout(() => {
+            //   //   directionsAPI(mps[0][0],mps[0][1],mps[1][0],mps[1][1])
+            //   // }, 15000)
+            //   setTimeout(() => {
+            //     factoryFunc(mps[0][0],mps[0][1],mps[1][0],mps[1][1])
+            //   },5000)
+            //   // console.log(`${mps[0][0]} | ${mps[0][1]} || ${mps[1][0]} | ${mps[1][1]}`)
+            // })
+            directionsAPI(paringCoordinates, 0, pendingCoordinates.length - 1)
+            dispatch({ type: SET_ROUTE_STATUS_LOADER, routestatusloader: { loading: true, percentage: 0 } })
+            // console.log(paringCoordinates)
+          }
+        })
+      }
+      else{
+        alert("Please add 2 or more stations");
+      }
     }
   }
 
@@ -189,6 +218,45 @@ function Map() {
   const clearPendingRouteData = () => {
     dispatch({ type: SET_ROUTE_MAKER_LIST, routemakerlist: [] })
     dispatch({ type: SET_ROUTE_PATH, routepath: [] })
+    setroutename("");
+  }
+
+  const saveRoute = () => {
+    if(routename == ""){
+      alert("Please input a name for the route")
+    }
+    else{
+      // console.log(routemakerlist)
+      if(routemakerlist.length > 1){
+        if(routepath.length > 1){
+          Axios.post(`${URL}/company/createRoute`, {
+            routeName: routename,
+            stationList: routemakerlist,
+            routePath: routepath
+          },{
+            headers:{
+              "x-access-token": localStorage.getItem("token")
+            }
+          }).then((response) => {
+            if(response.data.status){
+              console.log(response.data.result.message)
+              clearPendingRouteData()
+            }
+            else{
+              console.log(response.data.result.message)
+            }
+          }).catch((err) => {
+            console.log(err);
+          })
+        }
+        else{
+          alert("Click first Preview Route to scan the Route Path")
+        }
+      }
+      else{
+        alert("Please add 2 or more stations")
+      }
+    }
   }
 
   return (
@@ -214,7 +282,7 @@ function Map() {
             <li>
               <div id='div_menu_btns'>
                 <button className='btn_menu_navigations'>Live Map</button>
-                {/* <button className='btn_menu_navigations'>Bus Stops</button> */}
+                <button className='btn_menu_navigations'>Bus Stops</button>
                 <button className='btn_menu_navigations' onClick={() => { dispatch({ type: SET_MAP_MODE, mapmode: "routes" }) }}>Routes</button>
                 <button className='btn_menu_navigations'>Traffic</button>
               </div>
@@ -263,21 +331,22 @@ function Map() {
                             <th className='th_header_bus_stops_list'>Route ID</th>
                             <th className='th_header_bus_stops_list'>Route Name</th>
                           </tr>
-                          <tr className='tr_content_bus_stops_list'>
-                              <td>Hello</td>
-                              <td>World</td>
-                          </tr>
-                          {/* {busstopslist.map((list, i) => {
+                          {routelist.map((list, i) => {
                             return(
-                              <tr onClick={() => {
-                                dispatch({ type: SET_CENTER_MAP, centermap: { lat: parseFloat(list.coordinates.latitude), lng: parseFloat(list.coordinates.longitude) }})
-                                dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.busStopID })
-                              }} key={i} className='tr_content_bus_stops_list'>
-                                <td>{list.busStopID}</td>
-                                <td>{list.stationName}</td>
+                              <tr onClick={() => { 
+                                  dispatch({ type: SET_SAVED_ROUTE_PATH, savedroutepath: {
+                                      routeID: list.routeID,
+                                      routeName: list.routeName,
+                                      stationList: list.stationList,
+                                      routePath: list.routePath,
+                                      status: list.status
+                                  } })
+                               }} key={i} className='tr_content_bus_stops_list'>
+                                <td>{list.routeID}</td>
+                                <td>{list.routeName}</td>
                               </tr>
                             )
-                          })} */}
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -289,7 +358,7 @@ function Map() {
               </div>
               <div id='div_create_route_form'>
                 <p id='p_create_route_name_label'>Route Name</p>
-                <input type='text' id='input_create_route_name' className='inputs_create_route_classifier' placeholder='Type Route Name' />
+                <input type='text' id='input_create_route_name' value={routename} onChange={(e) => { setroutename(e.target.value) }} className='inputs_create_route_classifier' placeholder='Type Route Name' />
               </div>
               <div id='div_route_list_container'>
                 <p id='p_route_list_label'>Pending Coordinates</p>
@@ -322,7 +391,7 @@ function Map() {
               </div>
               <div id='div_navigations_create_route'>
                 <button className='btns_navigations_create_route' onClick={() => { routeCallAPI() }}>Preview Route</button>
-                <button className='btns_navigations_create_route'>Save Route</button>
+                <button className='btns_navigations_create_route' onClick={() => { saveRoute() }}>Save Route</button>
                 <button className='btns_navigations_create_route' onClick={() => { clearPendingRouteData() }}>Clear</button>
               </div>
             </div>

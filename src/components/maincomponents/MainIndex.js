@@ -19,6 +19,7 @@ function Map(){
   const selectedmarker = useSelector(state => state.selectedmarker);
   const routepath = useSelector(state => state.routepath);
   const routestatusloader = useSelector(state => state.routestatusloader);
+  const savedroutepath = useSelector(state => state.savedroutepath);
 
   const dispatch = useDispatch()
 
@@ -117,6 +118,7 @@ function Map(){
                       ...routemakerlist,
                       {
                         pendingID: Math.floor(Math.random() * 100000),
+                        stationID: data.busStopID,
                         stationName: data.stationName,
                         coordinates: [
                           data.coordinates.longitude,
@@ -139,7 +141,7 @@ function Map(){
         paths={[QCPath.coordinates[0][0], QCPath.coordinates[0][0]]}
         options={{
           fillColor: "transparent",
-          strokeColor: "red"
+          strokeColor: "grey"
         }}
       />
       {routepath.length != 0? (
@@ -150,6 +152,18 @@ function Map(){
           options={{
             fillColor: "transparent",
             strokeColor: "orange",
+            strokeWeight: 4
+          }}
+        />
+      ) : null}
+      {savedroutepath.routePath.length != 0? (
+        <Polyline
+          draggable={false}
+          editable={false}
+          path={savedroutepath.routePath}
+          options={{
+            fillColor: "transparent",
+            strokeColor: savedroutepath.status? "lime" : "red",
             strokeWeight: 4
           }}
         />

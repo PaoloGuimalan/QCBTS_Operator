@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux'
-import { setauthdetails, setbusstopslist, setcompanydetails, setconversations, setmapmode, setmessages, setroutemakerlist, setroutepath, setroutestatusloader, setselectedmarker } from '../actions';
+import { setauthdetails, setbusstopslist, setcompanydetails, setconversations, setmapmode, setmessages, setroutelist, setroutemakerlist, setroutepath, setroutestatusloader, setsavedroutepath, setselectedmarker } from '../actions';
 
 const combiner = combineReducers({
     authdetails: setauthdetails,
@@ -11,7 +11,9 @@ const combiner = combineReducers({
     selectedmarker: setselectedmarker,
     routemakerlist: setroutemakerlist,
     routepath: setroutepath,
-    routestatusloader: setroutestatusloader
+    routestatusloader: setroutestatusloader,
+    routelist: setroutelist,
+    savedroutepath: setsavedroutepath
 });
 
 const store = createStore(combiner);
