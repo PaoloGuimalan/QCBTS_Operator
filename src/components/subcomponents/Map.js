@@ -241,6 +241,7 @@ function Map() {
             if(response.data.status){
               console.log(response.data.result.message)
               clearPendingRouteData()
+              initRoutesList()
             }
             else{
               console.log(response.data.result.message)
