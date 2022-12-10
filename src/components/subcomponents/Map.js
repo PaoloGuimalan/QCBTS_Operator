@@ -300,7 +300,7 @@ function Map() {
       </div>
       <motion.div
       animate={{
-        right: savedroutepath.routeID != null? "10px" : "10px"
+        right: savedroutepath.routeID != null? "10px" : "-470px"
       }}
       id='div_routes_info' className='absolute_divs_map'>
         <div id='div_route_info_header'>
