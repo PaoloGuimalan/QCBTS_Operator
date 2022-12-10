@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
-import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_PUBLIC_ROUTE_LIST, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH } from '../../redux/types'
+import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_PUBLIC_ROUTE_LIST, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH, SET_SELECTED_MARKER } from '../../redux/types'
 import { URL } from '../../json/urlconfig'
 import { savedroutepathState } from '../../redux/actions'
 
@@ -22,6 +22,7 @@ function Map() {
   const routelist = useSelector(state => state.routelist)
   const publicroutelist = useSelector(state => state.publicroutelist)
   const authdetails = useSelector(state => state.authdetails);
+  const savedroutepath = useSelector(state => state.savedroutepath);
 
   let routepathholder = [];
   let routepathdeconstruct = [];
@@ -298,6 +299,57 @@ function Map() {
           </div>
       </div>
       <motion.div
+      animate={{
+        right: savedroutepath.routeID != null? "10px" : "10px"
+      }}
+      id='div_routes_info' className='absolute_divs_map'>
+        <div id='div_route_info_header'>
+          <p id='p_route_info_label'>Route Info - {savedroutepath.routeID}</p>
+          <button id='btn_route_info_close' onClick={() => { dispatch({ type: SET_SAVED_ROUTE_PATH, savedroutepath: savedroutepathState }) }}><CloseIcon /></button>
+        </div>
+        <div id='div_route_info_data_section'>
+          <div className='div_indv_sections'>
+            <p id='p_enlisted_bus_stops_label'>Bus Stops in Route</p>
+            <div id='div_table_conatiner_holder'>
+              <table id='tbl_enlisted_bus_stops_container'>
+                <tbody>
+                  <tr>
+                    <th className='th_label_header'>BS ID</th>
+                    <th className='th_label_header'>Station Name</th>
+                  </tr>
+                  {savedroutepath.stationList.map((list, i) => {
+                    return(
+                      <tr onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.stationID}) }} key={i} className='tr_content_bus_stops_list'>
+                        <td>{list.stationID}</td>
+                        <td>{list.stationName}</td>
+                      </tr>
+                      )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className='div_indv_sections'>
+            <p id='p_route_name_label'>{savedroutepath.routeName}</p>
+            <div id='div_route_info_details'>
+              <p id='p_details_label'>Details</p>
+              <div id='div_details_data_dynamic_container'>
+                <p className='p_details_data_holder'>{savedroutepath.routeID}</p>
+                <p className='p_details_data_holder'>{savedroutepath.stationList.length} included Bus Stops</p>
+                <p className='p_details_data_holder'>Data from {savedroutepath.companyID}</p>
+              </div>
+            </div>
+            <div id='div_route_info_details'>
+              <p id='p_details_label'>Status</p>
+              <div id='div_details_data_dynamic_container'>
+                <p className='p_details_data_holder'>{savedroutepath.privacy? "Route is in Public" : "Route is Private"}</p>
+                <p className='p_details_data_holder'>{savedroutepath.status? "Activated" : "Not Active"}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+      <motion.div
         animate={{
           marginLeft: menutrigger? "10px" : "-240px"
         }}
@@ -368,6 +420,7 @@ function Map() {
                                       stationList: list.stationList,
                                       routePath: list.routePath,
                                       companyID: list.companyID,
+                                      privacy: list.privacy,
                                       status: list.status
                                   } })
                                }} key={i} className='tr_content_bus_stops_list'>
@@ -396,6 +449,7 @@ function Map() {
                                       stationList: list.stationList,
                                       routePath: list.routePath,
                                       companyID: list.companyID,
+                                      privacy: list.privacy,
                                       status: list.status
                                   } })
                                }} key={i} className='tr_content_bus_stops_list'>
