@@ -8,7 +8,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
-import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH } from '../../redux/types'
+import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_PUBLIC_ROUTE_LIST, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH } from '../../redux/types'
 import { URL } from '../../json/urlconfig'
 import { savedroutepathState } from '../../redux/actions'
 
@@ -20,6 +20,8 @@ function Map() {
   const routepath = useSelector(state => state.routepath);
   const routestatusloader = useSelector(state => state.routestatusloader);
   const routelist = useSelector(state => state.routelist)
+  const publicroutelist = useSelector(state => state.publicroutelist)
+  const authdetails = useSelector(state => state.authdetails);
 
   let routepathholder = [];
   let routepathdeconstruct = [];
@@ -27,6 +29,7 @@ function Map() {
 
   const [menutrigger, setmenutrigger] = useState(false)
   const [routename, setroutename] = useState("");
+  const [routePrivacy, setroutePrivacy] = useState(false);
 
   const dispatch = useDispatch()
 
@@ -36,6 +39,7 @@ function Map() {
 
     initBusStopsData()
     initRoutesList()
+    initPublicRoutesList()
 
     return () => {
         cancelAxios.cancel();
@@ -45,7 +49,7 @@ function Map() {
   },[])
 
   const initRoutesList = () => {
-    Axios.get(`${URL}/company/routesList`, {
+    Axios.get(`${URL}/company/routesList/${authdetails.companyID}`, {
       headers:{
         "x-access-token": localStorage.getItem("token")
       }
@@ -53,6 +57,24 @@ function Map() {
       if(response.data.status){
         // console.log(response.data.result)
         dispatch({ type: SET_ROUTE_LIST, routelist: response.data.result })
+      }
+      else{
+        console.log(response.data.result.message)
+      }
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
+  const initPublicRoutesList = () => {
+    Axios.get(`${URL}/company/publicRouteList`, {
+      headers:{
+        "x-access-token": localStorage.getItem("token")
+      }
+    }).then((response) => {
+      if(response.data.status){
+        // console.log(response.data.result)
+        dispatch({ type: SET_PUBLIC_ROUTE_LIST, publicroutelist: response.data.result })
       }
       else{
         console.log(response.data.result.message)
@@ -232,7 +254,9 @@ function Map() {
           Axios.post(`${URL}/company/createRoute`, {
             routeName: routename,
             stationList: routemakerlist,
-            routePath: routepath
+            routePath: routepath,
+            companyID: authdetails.companyID,
+            privacy: routePrivacy
           },{
             headers:{
               "x-access-token": localStorage.getItem("token")
@@ -242,6 +266,8 @@ function Map() {
               console.log(response.data.result.message)
               clearPendingRouteData()
               initRoutesList()
+              initPublicRoutesList()
+              setroutePrivacy(false);
             }
             else{
               console.log(response.data.result.message)
@@ -325,7 +351,8 @@ function Map() {
           <div id='div_routes_window_sections_holder'>
             <div className='div_routes_window_sections'>
               <div id='div_bus_stops_list'>
-                    <div id='div_bus_stops_list_container'>
+              <p className='p_routes_list_indicator_label'>Company Routes</p>
+              <div id='div_bus_stops_list_container'>
                       <table id='tbl_bus_stops_list'>
                         <tbody>
                           <tr id='tr_header_bus_stops_list'>
@@ -340,6 +367,7 @@ function Map() {
                                       routeName: list.routeName,
                                       stationList: list.stationList,
                                       routePath: list.routePath,
+                                      companyID: list.companyID,
                                       status: list.status
                                   } })
                                }} key={i} className='tr_content_bus_stops_list'>
@@ -350,8 +378,36 @@ function Map() {
                           })}
                         </tbody>
                       </table>
-                    </div>
                   </div>
+                  <p className='p_routes_list_indicator_label'>Public Routes</p>
+                  <div id='div_bus_stops_list_container'>
+                      <table id='tbl_bus_stops_list'>
+                        <tbody>
+                          <tr id='tr_header_bus_stops_list'>
+                            <th className='th_header_bus_stops_list'>Route ID</th>
+                            <th className='th_header_bus_stops_list'>Route Name</th>
+                          </tr>
+                          {publicroutelist.map((list, i) => {
+                            return(
+                              <tr onClick={() => { 
+                                  dispatch({ type: SET_SAVED_ROUTE_PATH, savedroutepath: {
+                                      routeID: list.routeID,
+                                      routeName: list.routeName,
+                                      stationList: list.stationList,
+                                      routePath: list.routePath,
+                                      companyID: list.companyID,
+                                      status: list.status
+                                  } })
+                               }} key={i} className='tr_content_bus_stops_list'>
+                                <td>{list.routeID}</td>
+                                <td>{list.routeName}</td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
             </div>
             <div className='div_routes_window_sections'>
               <div id='div_create_route_header'>
@@ -360,6 +416,22 @@ function Map() {
               <div id='div_create_route_form'>
                 <p id='p_create_route_name_label'>Route Name</p>
                 <input type='text' id='input_create_route_name' value={routename} onChange={(e) => { setroutename(e.target.value) }} className='inputs_create_route_classifier' placeholder='Type Route Name' />
+              </div>
+              <div id='div_route_privacy'>
+                <p id='p_label_route_privacy'>Route Privacy - {routePrivacy? "Public" : "Private"}</p>
+                <div id='div_checker_route_privacy'>
+                  <span>
+                    <div class="container">
+                      <label class="switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" checked={routePrivacy} onChange={(e) => { setroutePrivacy(e.target.checked) }}/>
+                        <div class="slider round"></div>
+                      </label>
+                    </div>
+                  </span>
+                  <span>
+                    <p id='p_note_route_privacy'>Allow other companies / operators see your route.</p>
+                  </span>
+                </div>
               </div>
               <div id='div_route_list_container'>
                 <p id='p_route_list_label'>Pending Coordinates</p>

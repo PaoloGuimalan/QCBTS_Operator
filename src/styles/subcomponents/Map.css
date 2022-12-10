@@ -118,6 +118,15 @@
     height: 100%;
     display: flex;
     flex-direction: row;
+    overflow-y: auto;
+}
+
+.p_routes_list_indicator_label{
+    font-size: 13px;
+    margin: 0px;
+    text-align: left;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 .div_routes_window_sections{
@@ -128,6 +137,7 @@
 
 .div_routes_window_sections:first-of-type{
     background-color: transparent;
+    /* overflow-y: auto; */
 }
 
 .div_routes_window_sections:last-of-type{
@@ -207,6 +217,8 @@
     height: calc(100% - 10px);
     justify-content: center;
     padding: 5px;
+    flex-direction: column;
+    gap: 5px;
 }
 
 #div_bus_stops_list_container{
@@ -215,6 +227,7 @@
     background-color: black;
     border-radius: 0px;
     overflow-y: auto;
+    max-height: 150px;
 }
 
 #div_bus_stops_list_container::-webkit-scrollbar {
@@ -390,3 +403,86 @@
     box-shadow: 0px 0px 2px black;
     cursor: pointer;
 }
+
+#div_route_privacy{
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+}
+
+#p_label_route_privacy{
+    font-size: 13px;
+    text-align: left;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+#p_note_route_privacy{
+    margin: 0px;
+    font-size: 10px;
+    text-align: left;
+}
+
+#div_checker_route_privacy{
+    display: flex;
+    gap: 10px;
+}
+
+/*checkbox */
+
+.switch {
+    display: block;
+    height: 19px;
+    position: relative;
+    width: 30px;
+    margin-left: 0px;
+    margin-top: 3px;
+  }
+  
+  .switch input {
+    display:none;
+  }
+  
+  .slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    background-color: #fff;
+    bottom: 2px;
+    content: "";
+    height: 15px;
+    left: 3px;
+    position: absolute;
+    transition: .4s;
+    width: 15px;
+  }
+  
+  input:checked + .slider {
+    background-color: lime;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(10px);
+  }
+  
+  .slider.round {
+    border-radius: 30px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  /*end checkbox*/
