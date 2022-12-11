@@ -5,10 +5,11 @@ import MapIcon from '@material-ui/icons/Map'
 import InfoIcon from '@material-ui/icons/Info'
 import MenuIcon from '@material-ui/icons/Menu'
 import CloseIcon from '@material-ui/icons/Close'
+import StationIconDefault from '@material-ui/icons/Storefront'
 import { motion } from 'framer-motion'
 import { useDispatch, useSelector } from 'react-redux'
 import Axios from 'axios'
-import { SET_BUS_STOPS_LIST, SET_MAP_MODE, SET_PUBLIC_ROUTE_LIST, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH, SET_SELECTED_MARKER } from '../../redux/types'
+import { SET_BUS_STOPS_LIST, SET_BUS_STOP_INFO, SET_MAP_MODE, SET_PUBLIC_ROUTE_LIST, SET_ROUTE_LIST, SET_ROUTE_MAKER_LIST, SET_ROUTE_PATH, SET_ROUTE_STATUS_LOADER, SET_SAVED_ROUTE_PATH, SET_SELECTED_MARKER } from '../../redux/types'
 import { URL } from '../../json/urlconfig'
 import { savedroutepathState } from '../../redux/actions'
 
@@ -23,6 +24,7 @@ function Map() {
   const publicroutelist = useSelector(state => state.publicroutelist)
   const authdetails = useSelector(state => state.authdetails);
   const savedroutepath = useSelector(state => state.savedroutepath);
+  const busstopinfo = useSelector(state => state.busstopinfo);
 
   let routepathholder = [];
   let routepathdeconstruct = [];
@@ -46,6 +48,7 @@ function Map() {
         cancelAxios.cancel();
         dispatch({ type: SET_SAVED_ROUTE_PATH, savedroutepath: savedroutepathState })
         dispatch({ type: SET_MAP_MODE, mapmode: "none"})
+        dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: null })
     }
   },[])
 
@@ -319,7 +322,7 @@ function Map() {
                   </tr>
                   {savedroutepath.stationList.map((list, i) => {
                     return(
-                      <tr onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.stationID}) }} key={i} className='tr_content_bus_stops_list'>
+                      <tr onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.stationID}); dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: null }) }} key={i} className='tr_content_bus_stops_list'>
                         <td>{list.stationID}</td>
                         <td>{list.stationName}</td>
                       </tr>
@@ -361,7 +364,7 @@ function Map() {
             <li>
               <div id='div_menu_btns'>
                 <button className='btn_menu_navigations'>Live Map</button>
-                <button className='btn_menu_navigations'>Bus Stops</button>
+                <button className='btn_menu_navigations' onClick={() => { dispatch({ type: SET_MAP_MODE, mapmode: "bus_stops" }) }}>Bus Stops</button>
                 <button className='btn_menu_navigations' onClick={() => { dispatch({ type: SET_MAP_MODE, mapmode: "routes" }) }}>Routes</button>
                 <button className='btn_menu_navigations'>Traffic</button>
               </div>
@@ -521,6 +524,64 @@ function Map() {
                 <button className='btns_navigations_create_route' onClick={() => { saveRoute() }}>Save Route</button>
                 <button className='btns_navigations_create_route' onClick={() => { clearPendingRouteData() }}>Clear</button>
               </div>
+            </div>
+          </div>
+        </motion.div>
+        <motion.div
+        animate={{
+          right: mapmode == "bus_stops"? "10px" : "-470px"
+        }}
+        id='div_routes_window' className='absolute_divs_map'>
+          <div id='div_routes_window_header'>
+            <div id='p_routes_window_label'>
+              <span className='span_inside_routes_window_label'>Bus Stops Menu</span>
+            </div>
+            <button id='btn_bus_stops_close' onClick={() => { dispatch({ type: SET_MAP_MODE, mapmode: "none" }); dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: null }) }}><CloseIcon /></button>            
+          </div>
+          <div id='div_routes_window_sections_holder'>
+            <div className='div_routes_window_sections'>
+              <div id='div_bus_stops_list'>
+                <div id='div_table_conatiner_holder'>
+                  <table id='tbl_enlisted_bus_stops_container'>
+                    <tbody>
+                      <tr>
+                        <th className='th_label_header'>BS ID</th>
+                        <th className='th_label_header'>Station Name</th>
+                      </tr>
+                      {busstopslist.map((list, i) => {
+                        return(
+                          <tr onClick={() => { dispatch({ type: SET_SELECTED_MARKER, selectedmarker: list.busStopID}); dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: null }) }} key={i} className='tr_content_bus_stops_list'>
+                            <td>{list.busStopID}</td>
+                            <td>{list.stationName}</td>
+                          </tr>
+                          )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className='div_routes_window_sections'>
+              {busstopinfo != null? (
+                <div id='div_bus_stop_details_present'>
+                  <p id='p_create_route_label'>Bus Stop Details</p>
+                  <div id='div_bus_stop_basics'>
+                    <p className='p_details_basic'>{busstopinfo.stationName}</p>
+                    <p className='p_details_basic'>{busstopinfo.busStopID}</p>
+                    <p className='p_details_basic'>{busstopinfo.stationAddress}</p>
+                  </div>
+                  <div id='div_bus_stop_basics'>
+                    <p className='p_details_coordinates'>Coordinates</p>
+                    <p className='p_details_coordinates'>Lng: {busstopinfo.coordinates.longitude}</p>
+                    <p className='p_details_coordinates'>Lat: {busstopinfo.coordinates.latitude}</p>
+                  </div>
+                </div>
+              ) : (
+                <div id='div_bus_stop_details'>
+                  <StationIconDefault style={{fontSize: "70px", color: "grey"}} />
+                  <p id='p_bus_stop_details_default_label'>Select a station</p>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

@@ -9,7 +9,7 @@ import { motion } from 'framer-motion'
 import { URL } from '../../json/urlconfig'
 import OpennedIcon from '../../resources/imgs/OpenStop.png'
 import ClosedIcon from '../../resources/imgs/ClosedStop.png'
-import { SET_ROUTE_MAKER_LIST, SET_SELECTED_MARKER } from '../../redux/types';
+import { SET_BUS_STOP_INFO, SET_MAP_MODE, SET_ROUTE_MAKER_LIST, SET_SELECTED_MARKER } from '../../redux/types';
 
 function Map(){
 
@@ -50,6 +50,25 @@ function Map(){
         console.log(err);
       })
     }
+  }
+
+  const fetchBusStopData = (id) => {
+    Axios.get(`${URL}/company/busStopDetails/${id}`, {
+      headers:{
+        "x-access-token": localStorage.getItem("token")
+      }
+    }).then((response) => {
+      if(response.data.status){
+        console.log(response.data.result)
+        dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: response.data.result })
+        dispatch({ type: SET_MAP_MODE, mapmode: "bus_stops" })
+      }
+      else{
+        console.log(response.data.result.message)
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 
   return(
@@ -127,7 +146,7 @@ function Map(){
                       }] }) 
                       dispatch({ type: SET_SELECTED_MARKER, selectedmarker: null })
                     }}>{routemakerlist.length == 0? "Create Route" : "Add to Routes"}</motion.button>
-                    <button className='btn_infoWindow_existing_bs' onClick={() => {  }}>View Details</button>
+                    <button className='btn_infoWindow_existing_bs' onClick={() => { fetchBusStopData(data.busStopID) }}>View Details</button>
                   </div>
                 </div>
               </InfoWindow>
