@@ -59,7 +59,7 @@ function Map(){
       }
     }).then((response) => {
       if(response.data.status){
-        console.log(response.data.result)
+        // console.log(response.data.result)
         dispatch({ type: SET_BUS_STOP_INFO, busstopinfo: response.data.result })
         dispatch({ type: SET_MAP_MODE, mapmode: "bus_stops" })
       }
